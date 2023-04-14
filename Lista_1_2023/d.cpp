@@ -8,9 +8,8 @@ int main(){
     cin >> l >> r;
 
     max = l ^ r;
-    //cout << max << endl;
     pos = 0;
-
+    
     while (max != 0)
     {
         pos = (pos << 1) | 1;

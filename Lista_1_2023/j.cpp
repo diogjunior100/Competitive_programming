@@ -1,44 +1,49 @@
 #include <iostream>
 
-#define max 1001000
 using namespace std;
 
-int main(){
-    int n=1, m=1, temp, count = 0;
-    int vtra[max], vtrb[max];
+int main() {
+    int n,m,ja[1000010],jb[1000010], temp;
+    int count;
 
-    while (n > 0 || m > 0)
+    while (cin >> n >> m) 
     {
-        count = 0;
-        cin >> n >> m;
-
-        if (n == 0 && m == 0)
+        if (n==0 && m==0)
         {
             break;
         }
 
-        for (int i = 0; i < n; i++)
-        {
-            cin >> temp;
-            vtra[i] = temp;
+        for (int i=0;i<n;i++){
+            cin >> ja[i];
+        }   
+
+        for (int i=0;i<m;i++){
+            cin >> jb[i];
         }
 
-        for (int i = 0; i < m; i++)
-        {
-            cin >> temp;
+        count = 0;
+        int i = 0, j = 0;
 
-            for (int j = 0; j < n; j++)
+        while (i<n && j<m) 
+        {
+            while (j<=m && jb[j]< ja[i]) 
             {
-                if (vtra[j] == temp)
-                {
-                    count++;
-                }
-                
+                j++;
+            }
+
+            if (j>m)
+            { 
+                break;
+            }
+
+            if (ja[i] == jb[j]) 
+            {
+                count++; 
+                j++;
             }
             
+            i++;
         }
         cout << count << endl;
     }
-    
-    return 0;
 }

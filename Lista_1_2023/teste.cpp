@@ -1,32 +1,41 @@
 #include <iostream>
-#include <set>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
+
 int main() {
-    int n, m;
+  int n,m,cd,count;
 
-    while (cin >> n >> m && (n != 0 || m != 0)) {
-        set<int> jack_cds;
-        int cd, count = 0;
+  while(cin >> n >> m) 
+  {
+    if(n == 0 && m == 0) 
+	{
+		break;
+	}
 
-        // Lê os CDs de Jack e os adiciona ao set
-        for (int i = 0; i < n; i++) {
-            cin >> cd;
-            jack_cds.insert(cd);
-        }
+    vector<int> s;
+    count = 0;
 
-        // Compara cada CD de Jill com os CDs de Jack
-        for (int i = 0; i < m; i++) {
-            cin >> cd;
-            //cout << jack_cds.end() << endl;
-            if (jack_cds.find(cd) != 1) { // Encontrou um CD em comum
-                count++;
-            }
-        }
-
-        cout << count << endl; // Imprime a quantidade de CDs em comum
+    while(n--) 
+	{
+      cin >> cd;
+      s.push_back(cd);
     }
 
-    return 0;
+    while(m--) 
+	{
+      cin >> cd;
+	  auto it = find(s.begin(), s.end(), cd);
+	  
+      if(it != s.end()) 
+	  {
+        count++;
+      }
+    }
+    cout << count << endl;
+  }
+
+  return 0;
 }
