@@ -1,36 +1,40 @@
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int main(){
-    
-    string str;
+int main() {
     string s;
     int tam;
 
-    getline(cin, str);
-    tam = str.length();
+    getline(cin, s);
+    tam = s.length();
 
-    for (int i = 0; i < tam; i++)
-    {   
-        if (str[i] == '0' || str[i] == '1')
+    string str = "";
+
+    for (int i = 0; i < tam; i++) 
+    {
+
+        if (s[i] == '0') 
         {
-            s = s + '0';
-        }
-        
-        else if (str[i] == '1')
+            str = str +'0';
+        } 
+
+        else if (s[i] == '1') 
         {
-            s = s + '1';
+            str = str + '1';
+
         }
 
-        else if (str[i] == 'B')
+        else if (s[i] == 'B') 
         {
-            s = s + ' ';
+            if (!str.empty()) 
+            {
+                str.pop_back();
+            }
         }
     }
-    
-    cout << s << endl;
+
+    cout << str << endl;
 
     return 0;
 }
