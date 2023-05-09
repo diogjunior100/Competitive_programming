@@ -1,48 +1,76 @@
 #include <iostream>
+#include <vector>
+
 using namespace std;
 
-int main() {
-    int n;
+int main(){
+    int n, temp, razao, count = 0;
 
-    while (true) {
-        cin >> n;
-
-        if (n == -1) {
-            break;
+    cin >> n;
+    vector<int> vtr(n);
+    
+    if(n == 1){
+        cout << 0 << endl;
+    }
+    else{
+        for (int i = 0; i < n; i++){
+            cin >> temp;
+            vtr[i] = temp;
         }
 
-        int start = 1;
-        int end = 2;
-        int sum = 3;
+		for (int i = 0; i < n; i++)
+		{
+			if (vtr[i] != 0)
+			{
+				break;
+			}
+			count++;
+		}
 
-        while (end <= (n+1)/2) {
-            if (sum < n) {
-                end++;
-                sum += end;
-            } 
-            else if (sum > n) {
-                sum -= start;
-                start++;
-            } 
-            else {
-                cout << n << " = ";
-                for (int i = start; i <= end; i++) {
-                    cout << start;
-                    if (i < end) {
-                        cout << " + ";
-                    }
+		if (count == n)
+		{
+			cout << 0 << endl;
+			return 0;
+		}
+		//0 0 0 0
+
+		if (vtr[0] == 0 && n == 2)
+		{
+			cout << 1 << endl;
+			return 0;
+		}
+		//0 1
+
+        if (vtr[0] == 0)
+		{
+			razao = 0;
+		}
+		else
+		{
+			razao = vtr[1]/vtr[0];
+			//cout << razao << endl;
+		}
+		
+        
+        for (int i = 0; i < n-1; i++){
+            if ((vtr[i+1]/vtr[i]) != razao){
+                vtr.erase(vtr.begin()+ i+1);
+                if (vtr.size() == n-1){
+                    cout << 1 << endl;
+                    return 0;
                 }
-                cout << endl;
-
-                start++;
-                end++;
-                sum += end;
+                break;
             }
         }
 
-        if (n == 1) {
-            cout << "1 = 1" << endl;
+        for (int i = 0; i < n-1; i++){
+            if ((vtr[i+1]/vtr[i]) != razao){
+                cout << 2 << endl;
+                return 0;      
+            }
         }
+
+        cout << 0 << endl;
     }
 
     return 0;

@@ -5,31 +5,37 @@ using namespace std;
 
 
 int main(){
-    int n, count = 0, max = 0;
+    int numerator, denominator;
 
-    cin >> n;
 
-    while (n != -1)
+    while (cin >> numerator >> denominator)
     {
-        int value;
-        cin >> value;
+        int temp = numerator/denominator;
 
-        for (int i = 0; i <= value; i++)
+        cout << "[" << temp << ";";
+
+        numerator = numerator - (temp*denominator);
+        swap(denominator, numerator);
+        temp = numerator/denominator;
+        cout << temp;
+
+        numerator = numerator - (temp*denominator);
+        /*swap(denominator, numerator);
+        temp = numerator/denominator;
+        cout << temp << ",";
+
+        numerator = numerator - (temp*denominator);*/
+
+        while (numerator != 0)
         {
-            count = count + 1;
-
-            if (count == value){
-                count = 0;
-                if (max < value){
-                    max = value;
-                }
-                
-            }
-            
+            swap(denominator,numerator);
+            //cout << denominator << endl;
+            temp = numerator/denominator;
+            cout << "," << temp;
+            numerator = numerator - (temp*denominator);
         }
-        
+        cout << "]"<< endl;
     }
-    
     
     return 0;
 }
