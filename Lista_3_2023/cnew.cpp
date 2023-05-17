@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 using namespace std;
 using polynomial = vector<int>;
@@ -21,16 +22,15 @@ int main()
 {
     int x, i, value = 1;
     vector<int> a(1000);
-    a[0] = 1;
+    string s;
+
 
     while (cin >> x)
     {      
-        i = 0;
-        while (a[i] != '\0')
+        cin >> s;
+        for (int i = 0; i < s.length(); i++)
         {
-            cin >> value;
-            a[i] = value;
-            i++;
+            a[i] = s[i];
         }
         
         cout << evaluate(a, x) << endl;
