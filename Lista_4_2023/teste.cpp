@@ -1,20 +1,31 @@
 #include <iostream>
-#include <cmath>
+#include <math.h>
+#include <iomanip>
 
-int main() {
-    int X;
-    std::cout << "Digite um número inteiro positivo: ";
-    std::cin >> X;
-
-    int largestPower = 0;
-
-    for (int b = 1; b <= X; b++) {
-        for (int p = 2; pow(b, p) <= X; p++) {
-            largestPower = std::max(largestPower, static_cast<int>(pow(b, p)));
-        }
+using namespace std;
+double v[10000001];
+void precalculation()
+{
+    v[0]=1;
+    v[1]=1;
+    double sum = 0;
+    for(int i=2; i<11; i++)
+    {
+        sum = sum + log10((double)i);
+        v[i] = ceil(sum);
+        cout << v[i] << endl;
     }
+}
 
-    std::cout << "A maior potência perfeita menor ou igual a " << X << " é: " << largestPower << std::endl;
-
+int main()
+{
+    precalculation();
+    int n, test;
+    scanf("%d",&test);
+    while(test--)
+    {
+        scanf("%d",&n);
+        printf("%0.0lf\n",v[n]);
+    }
     return 0;
 }
