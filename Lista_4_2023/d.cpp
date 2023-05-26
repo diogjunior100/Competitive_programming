@@ -1,5 +1,5 @@
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 
@@ -22,21 +22,21 @@ long long fast_exp(long long a, long long n){
 
 int main()
 {
-    long long n, b, c1, c2;
+    long long n, b;
 
     while (cin >> n >> b)
     {
-        long long exp = b - 1000;
-        c1 = pow(2, exp);
+       long long c1 = pow(2, b);
+       long long c2 = pow(2, 1000) * n;
 
-        if (n <= c1)
-        {
+       if (c1 <= c2)
+       {
             cout << "yes" << endl;
-        }
-        else
-        {
+       }
+       else
+       {
             cout << "no" << endl;
-        }
+       }
         
     }
     
