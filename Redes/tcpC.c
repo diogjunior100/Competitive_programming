@@ -1,72 +1,76 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
-#include <pthread.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#define SERVER_IP "127.0.0.1"
-#define PORT 8080
-#define MAX_BUFFER_SIZE 1024
+#define MAX_SIZE 80
 
-int serverSocket;
-pthread_t receiveThread;
-
-void *receiveData(void *arg) {
-    char buffer[MAX_BUFFER_SIZE] = {0};
-    int bytesRead;
-
-    while (1) {
-        bytesRead = recv(serverSocket, buffer, MAX_BUFFER_SIZE, 0);
-        if (bytesRead <= 0)
-            break;
-
-        printf("Mensagem recebida do servidor: %s\n", buffer);
-        memset(buffer, 0, MAX_BUFFER_SIZE);
-    }
-
-    return NULL;
-}
-
-int main() {
+int main(int argc, char *argv[]) {
     struct sockaddr_in serverAddress;
+    int clientSocket;
+    char buffer[MAX_SIZE] = {0};
 
-    // Criação do socket do cliente
-    if ((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Erro ao criar o socket do cliente");
-        exit(EXIT_FAILURE);
+    if (argc < 3) {
+        printf("Uso correto: %s <ip_do_servidor> <porta_do_servidor>\n", argv[0]);
+        exit(1);
     }
+
+    memset((char *)&serverAddress, 0, sizeof(serverAddress));
+    memset((char *)&buffer, 0, sizeof(buffer));
 
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(PORT);
+    serverAddress.sin_addr.s_addr = inet_addr(argv[1]);
+    serverAddress.sin_port = htons(atoi(argv[2]));
 
-    // Conversão do endereço IP
-    if (inet_pton(AF_INET, SERVER_IP, &(serverAddress.sin_addr)) <= 0) {
-        perror("Endereço inválido ou não suportado");
-        exit(EXIT_FAILURE);
+    clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (clientSocket < 0) {
+        fprintf(stderr, "Falha ao criar socket!\n");
+        exit(1);
     }
 
-    // Conexão com o servidor
-    if (connect(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
-        perror("Erro na conexão com o servidor");
-        exit(EXIT_FAILURE);
+    if (connect(clientSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
+        fprintf(stderr, "Tentativa de conexao falhou!\n");
+        exit(1);
     }
 
-    printf("Conexão estabelecida com o servidor\n");
+    printf("Conectado ao servidor. Digite 'FIM' para encerrar.\n");
 
-    // Criação de thread para receber dados do servidor
-    if (pthread_create(&receiveThread, NULL, receiveData, NULL) != 0) {
-        perror("Erro na criação da thread");
-        exit(EXIT_FAILURE);
-    }
+    fd_set readfds;
+    int max_fd;
 
-    // Loop para enviar dados para o servidor
     while (1) {
-        char buffer[MAX_BUFFER_SIZE];
-        fgets(buffer, MAX_BUFFER_SIZE, stdin);
+        FD_ZERO(&readfds);
+        FD_SET(STDIN_FILENO, &readfds);
+        FD_SET(clientSocket, &readfds);
+        max_fd = (STDIN_FILENO > clientSocket) ? STDIN_FILENO : clientSocket;
 
-        send(serverSocket, buffer, strlen(buffer), 0);
+        if (select(max_fd + 1, &readfds, NULL, NULL, NULL) < 0) {
+            fprintf(stderr, "Erro na chamada select()\n");
+            exit(1);
+        }
+
+        if (FD_ISSET(STDIN_FILENO, &readfds)) {
+            fgets(buffer, MAX_SIZE, stdin);
+            send(clientSocket, buffer, strlen(buffer), 0);
+            if (strncmp(buffer, "FIM", 3) == 0)
+                break;
+        }
+
+        if (FD_ISSET(clientSocket, &readfds)) {
+            memset(buffer, 0, sizeof(buffer));
+            int bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
+            if (bytesRead <= 0)
+                break;
+            printf("Mensagem recebida do servidor: %s", buffer);
+        }
     }
 
+    printf("Encerrando a conexão.\n");
+    close(clientSocket);
     return 0;
 }
