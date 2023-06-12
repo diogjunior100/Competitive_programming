@@ -19,8 +19,9 @@ int main(){
         cout << sum << endl;
     }
 
-    for (int i: values) {
-		std::cout << i << ' ';
+    for (int i: values) 
+    {
+		cout << i << ' ';
 	}
 
     return 0;
