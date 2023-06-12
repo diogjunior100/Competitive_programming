@@ -20,16 +20,10 @@ int main(){
         cout << temp;
 
         numerator = numerator - (temp*denominator);
-        /*swap(denominator, numerator);
-        temp = numerator/denominator;
-        cout << temp << ",";
-
-        numerator = numerator - (temp*denominator);*/
 
         while (numerator != 0)
         {
             swap(denominator,numerator);
-            //cout << denominator << endl;
             temp = numerator/denominator;
             cout << "," << temp;
             numerator = numerator - (temp*denominator);
