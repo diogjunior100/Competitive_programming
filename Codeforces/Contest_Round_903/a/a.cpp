@@ -12,12 +12,14 @@ void solve(){
 
         int op = 0;
 
-        while (x.find(s) == string::npos && x.length() <= 25) {
+        while (x.find(s) == string::npos && x.length() <= 25) 
+        {
             x = x + x;
             op = op + 1;
         }
 
-        if (x.find(s) == string::npos) {
+        if (x.find(s) == string::npos) 
+        {
             op = -1;
         }
 
@@ -26,6 +28,9 @@ void solve(){
 
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
     int t;
     cin >> t;
 
